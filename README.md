@@ -91,3 +91,12 @@ In order to test the homework, we will issue the following command:
 ```
 
 Which will execute your program with the datasource path as the first argument as stated in the first paragraph and check the output.
+
+
+
+# Run the homework
+
+Exemple from the root folder of the project
+```
+node homework datasource
+```

@@ -57,7 +57,6 @@ function getFolderNameFromPath(folderPath) {
 
 
 var myArgs = process.argv;
-console.log(myArgs);
 
 
 let folderPath;
