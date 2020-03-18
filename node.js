@@ -19,6 +19,14 @@ module.exports = class Node {
         this.count = 0;
     }
 
+    /**
+     * for each each element (label) of list of path, this function add to a child node with the same label the count value, 
+     * otherwise it create a child node with  and add the count value
+     * then it shift the first value of list of path because it has been used and call this function to the child previously created/modified
+     * 
+     * @param {*} listOfPath 
+     * @param {*} count 
+     */
     addListOfPath(listOfPath, count) {
         for (const label of listOfPath) {
             let child = this.getChildren(label)
@@ -39,6 +47,10 @@ module.exports = class Node {
 
     }
 
+    /**
+     * Increment count with val
+     * @parameter val : number
+     */
     addCount(val) {
         this.count += val;
     }
@@ -67,6 +79,9 @@ module.exports = class Node {
         this.children[this.children.length] = node;
     }
 
+    /**
+     * Return a child with the associated label or return undefined
+     */
     getChildren = function (label) {
         for (const child of this.getChildrens()) {
             if (child.getValue() == label) {
@@ -76,13 +91,28 @@ module.exports = class Node {
         return undefined;
     }
 
+    /**
+     * return the list of children associated to this node
+     */
     getChildrens = function () {
         return this.children;
     }
+
+    /**
+     * Remove all children
+     */
     removeChildren = function () {
         this.children = [];
     }
 
+    /**
+     * Recursive function that parse each node in the same way as a Depth-first search
+     * Each time we encounter a node we agregate its parents value to its own value in the fullPath variable and then  give it to its children.
+     * ListOfPath represent the agregated data of each node that will be returned at the end. 
+     * It contain for each node its path from the root to this node and it's count value.  
+     * 
+     * 
+     * */
     deepSearch = function (fullPath = "", listOfPath = []) {
 
         fullPath += "/" + this.getValue()
@@ -96,6 +126,9 @@ module.exports = class Node {
         return listOfPath;
     }
 
+    /**
+     * Run the deepSearch function but from the child instead of the current node
+     */
     deepSearchFromChild = function () {
         let listOfPath = []
         for (const child of this.getChildrens()) {
@@ -107,6 +140,9 @@ module.exports = class Node {
         return listOfPath;
     }
 
+    /**
+     * Draw a tree using ascitree.js functions
+     */
     toString() {
         var get_title = function (node) {
             return `${node.getValue()} : ${node.count}`;
