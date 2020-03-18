@@ -126,7 +126,12 @@ let agregatedData = []
 for (const timenode of root.getChildrens()) {
     const time = timenode.getValue();
 
-    // call a recursive function that return a list of object that contain the agregated path of each node, and it's associated count
+    /**
+     * 
+     *   call a recursive function that return a list of object that contain 2 attributes for each node of the tree: 
+     * - the agregated path of each node
+     * - it's associated count
+     */
     let deepSearchResult = timenode.deepSearchFromChild();
     for (const data of deepSearchResult) {
         agregatedData.push({

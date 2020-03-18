@@ -2,6 +2,10 @@ const draw_tree = require('./asciitree');
 
 /**
  *  © Allan Elleuch
+ * 
+ * Generic tree implementation
+ * Each node have a value that is used as a label and also a count value that are agregated each time we add new path we common hierarchy 
+ * 
  */
 
 module.exports = class Node {
