@@ -94,9 +94,3 @@ Which will execute your program with the datasource path as the first argument a
 
 
 
-# Run the homework
-
-Exemple from the root folder of the project
-```
-node homework datasource
-```

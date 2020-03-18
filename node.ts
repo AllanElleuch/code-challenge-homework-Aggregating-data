@@ -1,3 +1,5 @@
+import { AgregatedData } from "./agregatedData";
+
 const draw_tree = require('./asciitree');
 
 /**
@@ -12,17 +14,17 @@ const draw_tree = require('./asciitree');
  * - Deletion: O(1)
  */
 
-module.exports = class Node {
+export class Node {
     // node children, a tree node can have 0 or more child
-    children;
+    children: Map<string, Node>;
     // parent node, a tree node can only have one parents
-    parent;
+    parent: Node;
     // number value used to agregate count
-    count;
+    count: number;
     // value stored in the node, it it also used as a label to identify children
-    value;
+    value: string;
 
-    constructor(value) {
+    constructor(value: string) {
         this.value = value ? value : '';
         this.children = new Map();
         this.parent = null;
@@ -37,8 +39,7 @@ module.exports = class Node {
      * @param {*} listOfPath 
      * @param {*} count 
      */
-    addListOfLabel(listOfPath, count) {
-        console.log(`call add list of path ${listOfPath} :  ${count}`)
+    addListOfLabel(listOfPath: string[], count: number) {
         for (const label of listOfPath) {
             let child = this.getChild(label)
             if (child) {
@@ -62,30 +63,30 @@ module.exports = class Node {
      * Increment count with val
      * @parameter val : number
      */
-    addCount(val) {
+    addCount(val: number) {
         this.count += val;
     }
 
-    getValue() {
+    getValue(): string {
         return this.value;
     }
 
-    getCount() {
+    getCount(): number {
         return this.count;
     }
     setValue() {
         return this.value;
     }
 
-    setParentNode = function (node) {
+    setParentNode = function (node: Node) {
         this.parent = node;
     }
 
-    getParentNode = function () {
+    getParentNode = function (): Node {
         return this.parent;
     }
 
-    addChild = function (node) {
+    addChild = function (node: Node) {
         node.setParentNode(this);
         this.children.set(node.getValue(), node);
     }
@@ -93,7 +94,7 @@ module.exports = class Node {
     /**
      * Return a child with the associated label or return undefined
      */
-    getChild = function (label) {
+    getChild = function (label: string): Node {
         let child = this.children.get(label)
         if (child) {
             return child
@@ -105,7 +106,7 @@ module.exports = class Node {
      * return the list of children associated to this node
      * complexity n where n is the number of child
      */
-    getChildren = function () {
+    getChildren = function (): Node[] {
         // return this.children;
         const iterator = this.children.values();
         return Array.from(iterator)
@@ -127,10 +128,10 @@ module.exports = class Node {
      * 
      * 
      * */
-    deepSearch = function (fullPath = "", listOfPath = []) {
+    deepSearch = function (fullPath = "", listOfPath: AgregatedData[] = []): AgregatedData[] {
 
         fullPath += "/" + this.getValue()
-        listOfPath.push({ path: fullPath, count: this.getCount() });
+        listOfPath.push(new AgregatedData(fullPath, undefined, this.getCount()));
 
 
         for (const child of this.getChildren()) {
@@ -143,8 +144,8 @@ module.exports = class Node {
     /**
      * Run the deepSearch function but from the child instead of the current node
      */
-    deepSearchFromChild = function () {
-        let listOfPath = []
+    deepSearchFromChild = function (): AgregatedData[] {
+        let listOfPath: AgregatedData[] = []
         for (const child of this.getChildren()) {
             let childNodesProcessed = child.deepSearch()
             listOfPath = listOfPath.concat(childNodesProcessed);
@@ -157,12 +158,12 @@ module.exports = class Node {
     /**
      * Draw a tree using ascitree.js functions
      */
-    toString() {
-        var get_title = function (node) {
+    toString(): string {
+        var get_title = function (node: Node) {
             return `${node.getValue()} : ${node.count}`;
         };
 
-        var get_nodes = function (node) {
+        var get_nodes = function (node: Node) {
             return node.getChildren();
         };
         return draw_tree(this, get_title, get_nodes);

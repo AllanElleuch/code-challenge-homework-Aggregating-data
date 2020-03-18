@@ -3,8 +3,11 @@
  * Structure to store agregated data
  */
 
-module.exports = class AgregatedData {
-    constructor(target, time, count) {
+export class AgregatedData {
+    target: string;
+    time: string;
+    count: number;
+    constructor(target: string, time: string, count: number) {
         this.target = target ? target : '';
         this.time = time;
         this.count = count;
