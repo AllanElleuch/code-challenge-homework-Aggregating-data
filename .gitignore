@@ -1,2 +1,3 @@
 node_modules
 ./**/*-agg.json
+package-lock.json
