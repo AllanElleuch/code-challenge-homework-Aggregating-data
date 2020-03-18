@@ -1,5 +1,6 @@
 
 const Node = require('./node');
+const AgregatedData = require('./agregatedData');
 const path = require('path');
 const fs = require('fs');
 
@@ -80,8 +81,8 @@ let listOfJSON = getJSONFiles(folderPath);
 
 /**
  * We are gonna project all the data from files in the folderPath to a generic tree
- * The first node of the tree will contain the timestamp data 
- * then all the child will have folder hirarchie as value ( i.e  child level ! will have code1 => child level ! will have code2 )
+ * The first node of the tree will contain the time data 
+ * then all the child will have folder hirarchie as value ( i.e  child level 1 will have code1 => child level 2 will have code2 )
  */
 var root = new Node('root');
 
@@ -113,7 +114,7 @@ for (const data of listOfJSON) {
     listOfNodeLabel = listOfNodeLabel.concat(listOfPath);
 
     // This function parse the list and add it's element to our root node
-    root.addListOfPath(listOfNodeLabel, count);
+    root.addListOfLabel(listOfNodeLabel, count);
 
 }
 
@@ -122,23 +123,24 @@ for (const data of listOfJSON) {
  */
 
 
+
+
+
 let agregatedData = []
-for (const timenode of root.getChildrens()) {
+for (const timenode of root.getChildren()) {
     const time = timenode.getValue();
 
     /**
      * 
-     *   call a recursive function that return a list of object that contain 2 attributes for each node of the tree: 
-     * - the agregated path of each node
+     *   call a recursive function that parse each node in the same way as a Depth-first search and then 
+     * return for each node of the tree a list of object that contain 2 attributes :
+     * - the agregated path from the root to each node
      * - it's associated count
      */
     let deepSearchResult = timenode.deepSearchFromChild();
     for (const data of deepSearchResult) {
-        agregatedData.push({
-            "target": data.path,
-            "time": time,
-            "count": data.count
-        })
+        let dataObject = new AgregatedData(data.path, time, data.count);
+        agregatedData.push(dataObject);
     }
 
 }
@@ -152,7 +154,7 @@ let folderName = getFolderNameFromPath(folderPath);
 let fileToWrite = `${folderPath}/${folderName}-agg.json`
 
 
-// for better output of the JSON.stringify we defined space as 4 and replacer as null otherwise it render one line json that difficult to read
+// for better output of the JSON.stringify we defined space as 4 and replacer as null otherwise it render one line json that are difficult to read
 fs.writeFileSync(fileToWrite, JSON.stringify(agregatedData, null, 4));
 
 /**

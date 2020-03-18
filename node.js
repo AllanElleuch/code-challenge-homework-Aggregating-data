@@ -6,15 +6,25 @@ const draw_tree = require('./asciitree');
  * Generic tree implementation
  * Each node have a value that is used as a label and also a count value that are agregated each time we add new path we common hierarchy 
  * 
+ * children are store in a map instead of a list, this allow better scalability if the tree becomes complexe, with respectively :
+ * - Insertion: O(1)
+ * - Lookup: O(1)
+ * - Deletion: O(1)
  */
 
 module.exports = class Node {
+    // node children, a tree node can have 0 or more child
     children;
+    // parent node, a tree node can only have one parents
     parent;
+    // number value used to agregate count
     count;
+    // value stored in the node, it it also used as a label to identify children
+    value;
+
     constructor(value) {
         this.value = value ? value : '';
-        this.children = [];
+        this.children = new Map();
         this.parent = null;
         this.count = 0;
     }
@@ -27,20 +37,21 @@ module.exports = class Node {
      * @param {*} listOfPath 
      * @param {*} count 
      */
-    addListOfPath(listOfPath, count) {
+    addListOfLabel(listOfPath, count) {
+        console.log(`call add list of path ${listOfPath} :  ${count}`)
         for (const label of listOfPath) {
-            let child = this.getChildren(label)
+            let child = this.getChild(label)
             if (child) {
                 child.addCount(count);
                 listOfPath.shift();
-                child.addListOfPath(listOfPath, count);
+                child.addListOfLabel(listOfPath, count);
             } else {
                 let val = listOfPath.shift();
                 let newNode = new Node(val)
                 newNode.addCount(count);
 
                 this.addChild(newNode);
-                newNode.addListOfPath(listOfPath, count);
+                newNode.addListOfLabel(listOfPath, count);
 
             }
         }
@@ -76,33 +87,36 @@ module.exports = class Node {
 
     addChild = function (node) {
         node.setParentNode(this);
-        this.children[this.children.length] = node;
+        this.children.set(node.getValue(), node);
     }
 
     /**
      * Return a child with the associated label or return undefined
      */
-    getChildren = function (label) {
-        for (const child of this.getChildrens()) {
-            if (child.getValue() == label) {
-                return child;
-            }
+    getChild = function (label) {
+        let child = this.children.get(label)
+        if (child) {
+            return child
         }
         return undefined;
     }
 
     /**
      * return the list of children associated to this node
+     * complexity n where n is the number of child
      */
-    getChildrens = function () {
-        return this.children;
+    getChildren = function () {
+        // return this.children;
+        const iterator = this.children.values();
+        return Array.from(iterator)
     }
 
     /**
      * Remove all children
      */
     removeChildren = function () {
-        this.children = [];
+        // this.children = [];
+        this.children = new Map();
     }
 
     /**
@@ -119,7 +133,7 @@ module.exports = class Node {
         listOfPath.push({ path: fullPath, count: this.getCount() });
 
 
-        for (const child of this.getChildrens()) {
+        for (const child of this.getChildren()) {
             listOfPath = child.deepSearch(fullPath, listOfPath);
         }
 
@@ -131,7 +145,7 @@ module.exports = class Node {
      */
     deepSearchFromChild = function () {
         let listOfPath = []
-        for (const child of this.getChildrens()) {
+        for (const child of this.getChildren()) {
             let childNodesProcessed = child.deepSearch()
             listOfPath = listOfPath.concat(childNodesProcessed);
 
@@ -149,7 +163,7 @@ module.exports = class Node {
         };
 
         var get_nodes = function (node) {
-            return node.getChildrens();
+            return node.getChildren();
         };
         return draw_tree(this, get_title, get_nodes);
     }
