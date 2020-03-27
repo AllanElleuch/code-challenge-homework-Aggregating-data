@@ -108,6 +108,14 @@ I created different :
 ## Note
 I modified the json inside the datasource to be like the example in the readme
 
+## Visuals
+
+### Output in terminal
+![alt text](https://github.com/AllanElleuch/code-challenge-homework-Aggregating-data/blob/master/screenshoots/run.JPG "output in a terminal with an ascii tree")
+
+### JSON Output 
+![alt text](https://github.com/AllanElleuch/code-challenge-homework-Aggregating-data/blob/master/screenshoots/output-json.JPG "formated json output")
+
 ## Run the homework
 Run the following to run the homework
 ```
