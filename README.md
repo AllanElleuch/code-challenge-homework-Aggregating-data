@@ -101,8 +101,8 @@ I decided to use Typescript to do the homework.
 
 I created different :
 
-- agregatedData.ts : An agregatedData class to represent the data in the json files
-- node.ts : A Node Class to agregate the data on a generic tree
+- agregatedData.ts : A class to represent data from the json files
+- node.ts : A Node Class to aggregate the data on a generic tree
 - asciitree.js : Credit goes to Anton Medvedev, I borrowed his class to help visualise the node tree with an ascii representation
 
 ## Note
